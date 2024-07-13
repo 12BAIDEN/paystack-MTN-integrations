@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors'); 
 require('dotenv').config(); 
 const paystack = require('paystack')(process.env.PAYSTACK_SECRET_KEY);
 
