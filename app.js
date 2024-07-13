@@ -8,7 +8,7 @@ const paystack = require('paystack')(process.env.PAYSTACK_SECRET_KEY);
 const app = express();
 app.use(bodyParser.json());
 
-// Initialize MTN Mobile Money transaction
+
 app.post('/initialize', (req, res) => {
   const { email, amount, phone } = req.body;
 
