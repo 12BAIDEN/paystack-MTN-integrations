@@ -8,6 +8,8 @@ const paystack = require('paystack')(process.env.PAYSTACK_SECRET_KEY);
 const app = express();
 app.use(bodyParser.json());
 
+app.use(cors());
+
 
 app.post('/initialize', (req, res) => {
   const { email, amount, phone } = req.body;
