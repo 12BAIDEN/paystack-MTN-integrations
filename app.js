@@ -16,7 +16,8 @@ app.post('/initialize', (req, res) => {
 
   paystack.transaction.initialize({
     email: email,
-    amount: amount * 100, // Amount in kobo (NGN)
+    amount: amount * 100, // Amount in Pesewas (GHS)
+    currency: 'GHS', // Specify Ghana Cedis
     mobile_money: {
       phone: phone, // Customer's phone number
       provider: 'mtn'
