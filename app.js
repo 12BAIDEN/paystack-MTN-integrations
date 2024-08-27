@@ -4,17 +4,15 @@ const cors = require('cors');
 require('dotenv').config(); 
 const paystack = require('paystack')(process.env.PAYSTACK_SECRET_KEY);
 
+
 const app = express();
 app.use(bodyParser.json());
+
 app.use(cors());
 
-app.post('/initialize', (req, res) => {
-  const { email, amount, phone, caseDescription, reference } = req.body;
 
-  // Ensure all required fields are provided
-  if (!email || !amount || !phone || !caseDescription || !reference) {
-    return res.status(400).json({ error: 'All fields must be filled out' });
-  }
+app.post('/initialize', (req, res) => {
+  const { email, amount, phone, caseDescription} = req.body;
 
   paystack.transaction.initialize({
     email: email,
@@ -24,7 +22,6 @@ app.post('/initialize', (req, res) => {
       phone: phone, // Customer's phone number
       provider: 'mtn'
     },
-    reference: reference, // Use the custom reference provided by the user
     metadata: {
       custom_fields: [
         {
@@ -39,35 +36,29 @@ app.post('/initialize', (req, res) => {
         }
       ]
     }
-  })
-  .then((body) => {
-    return res.json(body);
-  })
-  .catch((error) => {
-    console.error('Error initializing transaction:', error);
-    return res.status(500).json({ error: 'Transaction initialization failed', details: error });
+  }).then((body) => {
+    res.json(body);
+  }).catch((error) => {
+    res.status(500).json(error);
   });
 });
 
-// Verify transaction and log metadata
+// Verify transaction
 app.get('/verify/:reference', (req, res) => {
   const reference = req.params.reference;
 
   paystack.transaction.verify(reference)
     .then((body) => {
-      console.log('Transaction Metadata:', body.data.metadata); // Log metadata to verify it
-      return res.json(body);
-    })
-    .catch((error) => {
-      console.error('Error verifying transaction:', error);
-      return res.status(500).json({ error: 'Transaction verification failed', details: error });
+      res.json(body);
+    }).catch((error) => {
+      res.status(500).json(error);
     });
 });
 
-// Webhook endpoint to capture Paystack events
+// Webhook endpoint
 app.post('/webhook', (req, res) => {
   const event = req.body;
-  console.log('Webhook event received:', event.data.metadata); // Log metadata to ensure it's captured
+  console.log(event);
   res.sendStatus(200);
 });
 
