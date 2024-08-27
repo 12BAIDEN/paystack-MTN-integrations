@@ -12,12 +12,13 @@ app.use(cors());
 
 
 app.post('/initialize', (req, res) => {
-  const { email, amount, phone, caseDescription} = req.body;
+  const { email, amount, phone, reference} = req.body;
 
   paystack.transaction.initialize({
     email: email,
     amount: amount * 100, // Amount in Pesewas (GHS)
     currency: 'GHS', // Specify Ghana Cedis
+    reference: reference, // Custom reference provided by the user
     mobile_money: {
       phone: phone, // Customer's phone number
       provider: 'mtn'
