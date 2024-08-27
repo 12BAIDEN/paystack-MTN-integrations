@@ -16,7 +16,7 @@ app.post('/initialize', (req, res) => {
 
   paystack.transaction.initialize({
     email: email,
-    amount: amount, // Amount in kobo (NGN)
+    amount: amount * 100, // Amount in kobo (NGN)
     mobile_money: {
       phone: phone, // Customer's phone number
       provider: 'mtn'
