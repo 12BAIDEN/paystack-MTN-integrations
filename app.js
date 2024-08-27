@@ -31,9 +31,9 @@ app.post('/initialize', (req, res) => {
           value: phone
         },
         {
-          display_name: "Case Description",
-          variable_name: "case_description",
-          value: caseDescription // Store the case description here
+          display_name: "Reference",
+          variable_name: "reference",
+          value: reference// Store the case description here
         }
       ]
     }
