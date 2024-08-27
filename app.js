@@ -9,10 +9,10 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.post('/initialize', (req, res) => {
-  const { email, amount, phone, caseDescription } = req.body;
+  const { email, amount, phone, caseDescription, reference } = req.body;
 
   // Ensure all required fields are provided
-  if (!email || !amount || !phone || !caseDescription) {
+  if (!email || !amount || !phone || !caseDescription || !reference) {
     return res.status(400).json({ error: 'All fields must be filled out' });
   }
 
@@ -24,6 +24,7 @@ app.post('/initialize', (req, res) => {
       phone: phone, // Customer's phone number
       provider: 'mtn'
     },
+    reference: reference, // Use the custom reference provided by the user
     metadata: {
       custom_fields: [
         {
