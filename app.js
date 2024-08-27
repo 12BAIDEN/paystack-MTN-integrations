@@ -1,4 +1,3 @@
-// Express Server Code
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors'); 
@@ -11,6 +10,11 @@ app.use(cors());
 
 app.post('/initialize', (req, res) => {
   const { email, amount, phone, caseDescription } = req.body;
+
+  // Ensure all required fields are provided
+  if (!email || !amount || !phone || !caseDescription) {
+    return res.status(400).json({ error: 'All fields must be filled out' });
+  }
 
   paystack.transaction.initialize({
     email: email,
@@ -44,12 +48,13 @@ app.post('/initialize', (req, res) => {
   });
 });
 
-// Verify transaction
+// Verify transaction and log metadata
 app.get('/verify/:reference', (req, res) => {
   const reference = req.params.reference;
 
   paystack.transaction.verify(reference)
     .then((body) => {
+      console.log('Transaction Metadata:', body.data.metadata); // Log metadata to verify it
       return res.json(body);
     })
     .catch((error) => {
@@ -58,10 +63,10 @@ app.get('/verify/:reference', (req, res) => {
     });
 });
 
-// Webhook endpoint
+// Webhook endpoint to capture Paystack events
 app.post('/webhook', (req, res) => {
   const event = req.body;
-  console.log('Webhook event received:', event);
+  console.log('Webhook event received:', event.data.metadata); // Log metadata to ensure it's captured
   res.sendStatus(200);
 });
 
@@ -69,33 +74,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-// Client-Side JavaScript (Form Submission)
-function submitDonationForm() {
-  const email = document.getElementById('email').value;
-  const amount = document.querySelector('input[name="amount"]:checked')?.value || document.getElementById('custom-amount').value;
-  const phone = document.getElementById('phone').value;
-  const caseDescription = document.getElementById('case-description').value;
-
-  if (!email || !amount || !phone || !caseDescription) {
-    console.error('All fields must be filled out.');
-    return;
-  }
-
-  fetch('/initialize', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, amount, phone, caseDescription }),
-  })
-  .then(response => response.json())
-  .then(data => {
-      console.log('Success:', data);
-      // Handle the response
-  })
-  .catch((error) => {
-      console.error('Error:', error);
-      // Handle the error
-  });
-}
