@@ -18,7 +18,7 @@ app.post('/initialize', (req, res) => {
     email: email,
     amount: amount * 100, // Amount in Pesewas (GHS)
     currency: 'GHS', // Specify Ghana Cedis
-    reference: reference, // Custom reference provided by the user
+    //reference: reference, Custom reference provided by the user
     mobile_money: {
       phone: phone, // Customer's phone number
       provider: 'mtn'
