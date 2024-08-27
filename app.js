@@ -12,7 +12,7 @@ app.use(cors());
 
 
 app.post('/initialize', (req, res) => {
-  const { email, amount, phone } = req.body;
+  const { email, amount, phone, caseDescription} = req.body;
 
   paystack.transaction.initialize({
     email: email,
@@ -28,6 +28,11 @@ app.post('/initialize', (req, res) => {
           display_name: "Mobile Number",
           variable_name: "mobile_number",
           value: phone
+        },
+        {
+          display_name: "Case Description",
+          variable_name: "case_description",
+          value: caseDescription // Store the case description here
         }
       ]
     }
